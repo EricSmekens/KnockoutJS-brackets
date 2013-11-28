@@ -1,0 +1,12 @@
+{
+    "name": "EricSmekens.knockoutjs",
+    "title": "KnockoutJS for Brackets",
+    "description": "Adding knockout functionality to brackets",
+    "homepage": "https://github.com/EricSmekens/KnockoutJS-brackets",
+    "version": "0.0.1",
+    "author": "Eric Smekens",
+    "license": "MIT",
+    "engines": {
+        "brackets": ">=0.24.0"
+    }
+}
