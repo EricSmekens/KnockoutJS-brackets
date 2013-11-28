@@ -1,5 +1,5 @@
 /*jslint vars: true, plusplus: true, devel: true, nomen: true, indent: 4, maxerr: 50 */
-/*global define, brackets, $ */
+/*global define, $, brackets, window */
 
 define(function (require, exports, module) {
     "use strict";
@@ -11,6 +11,7 @@ define(function (require, exports, module) {
         JSUtils                 = brackets.getModule("language/JSUtils"),
         PerfUtils               = brackets.getModule("utils/PerfUtils"),
         ProjectManager          = brackets.getModule("project/ProjectManager");
+        //KOUtils                 = require("KOUtils");
     
     /**
      * Return the selected string.
@@ -139,9 +140,9 @@ define(function (require, exports, module) {
      * @return {$.Promise} a promise that will be resolved with an InlineWidget
      *      or null if we're not going to provide anything.
      */
-    function javaScriptFunctionProvider(hostEditor, pos) {
+    function computedProvider(hostEditor, pos) {
         // Only provide a JavaScript editor when cursor is in JavaScript content
-        if (hostEditor.getModeForSelection() !== "javascript") {
+        if (hostEditor.getModeForSelection() !== "html") {
             return null;
         }
         
@@ -162,12 +163,12 @@ define(function (require, exports, module) {
     }
 
     // init
-    EditorManager.registerInlineEditProvider(javaScriptFunctionProvider);
+    EditorManager.registerInlineEditProvider(computedProvider);
     PerfUtils.createPerfMeasurement("KNOCKOUT_INLINE_CREATE", "Knockout Inline Editor Creation");
     PerfUtils.createPerfMeasurement("KNOCKOUT_FIND_FUNCTION", "Knockout Find Function");
     
     // for unit tests only
-    exports.javaScriptFunctionProvider  = javaScriptFunctionProvider;
+    exports.computedProvider            = computedProvider;
     exports._createInlineEditor         = _createInlineEditor;
     exports._findInProject              = _findInProject;
 });
