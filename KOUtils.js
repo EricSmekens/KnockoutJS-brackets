@@ -7,17 +7,17 @@
 define(function (require, exports, module) {
     "use strict";
     
-    var _ = require("thirdparty/lodash");
+    var _ = brackets.getModule("thirdparty/lodash");
     
     // Load brackets modules
-    var Async                   = require("utils/Async"),
-        DocumentManager         = require("document/DocumentManager"),
-        ChangedDocumentTracker  = require("document/ChangedDocumentTracker"),
-        FileSystem              = require("filesystem/FileSystem"),
-        FileUtils               = require("file/FileUtils"),
-        PerfUtils               = require("utils/PerfUtils"),
-        ProjectManager          = require("project/ProjectManager"),
-        StringUtils             = require("utils/StringUtils");
+    var Async                   = brackets.getModule("utils/Async"),
+        DocumentManager         = brackets.getModule("document/DocumentManager"),
+        ChangedDocumentTracker  = brackets.getModule("document/ChangedDocumentTracker"),
+        FileSystem              = brackets.getModule("filesystem/FileSystem"),
+        FileUtils               = brackets.getModule("file/FileUtils"),
+        PerfUtils               = brackets.getModule("utils/PerfUtils"),
+        ProjectManager          = brackets.getModule("project/ProjectManager"),
+        StringUtils             = brackets.getModule("utils/StringUtils");
 
     /**
      * Tracks dirty documents between invocations of findMatchingFunctions.

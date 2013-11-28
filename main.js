@@ -10,8 +10,8 @@ define(function (require, exports, module) {
         DocumentManager         = brackets.getModule("document/DocumentManager"),
         JSUtils                 = brackets.getModule("language/JSUtils"),
         PerfUtils               = brackets.getModule("utils/PerfUtils"),
-        ProjectManager          = brackets.getModule("project/ProjectManager");
-        //KOUtils                 = require("KOUtils");
+        ProjectManager          = brackets.getModule("project/ProjectManager"),
+        KOUtils                 = require("KOUtils");
     
     /**
      * Return the selected string.
