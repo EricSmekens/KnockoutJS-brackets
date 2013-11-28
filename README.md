@@ -14,6 +14,4 @@ Currently planning to implement, in this order:
     Lint API additions for ko.computed, ko.observable maybe in the future.
 
 
-Thanks to:
-    The brackets-team, for brackets.
-    AngularUI / Dean Sofer, for creating AngularJS extension, which this extension is based on.
+Thanks to the brackets-team, for brackets.
