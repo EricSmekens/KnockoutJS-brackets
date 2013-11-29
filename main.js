@@ -35,7 +35,7 @@ define(function (require, exports, module) {
         
         ProjectManager.getAllFiles()
             .done(function (files) {
-                JSUtils.findMatchingFunctions(functionName, files)
+                KOUtils.findMatchingFunctions(functionName, files, true)
                     .done(function (functions) {
                         PerfUtils.addMeasurement(PerfUtils.KNOCKOUT_FIND_FUNCTION);
                         result.resolve(functions);

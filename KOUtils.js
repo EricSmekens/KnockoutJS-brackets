@@ -51,7 +51,7 @@ define(function (require, exports, module) {
         PerfUtils.markStart(PerfUtils.KOUTILS_REGEXP);
         
         while ((match = _computedRegExp.exec(text)) !== null) {
-            functionName = (match[2] || match[5]).trim();
+            functionName = (match[1] || match[0]).trim();
             
             if (!Array.isArray(results[functionName])) {
                 results[functionName] = [];
