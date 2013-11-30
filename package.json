@@ -1,5 +1,5 @@
 {
-    "name": "EricSmekens.knockoutjs",
+    "name": "ericsmekens.knockoutjs",
     "title": "KnockoutJS for Brackets",
     "description": "Adding knockout quickedits to brackets (only basic quick-edit for ko.computed at the moment.)",
     "homepage": "https://github.com/EricSmekens/KnockoutJS-brackets",
