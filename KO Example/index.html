@@ -1,9 +1,6 @@
 <html>
 <head>
 <script>
-    function fullName(hello) {
-        return hello + "";    
-    }
 	// Here's my data model
 	var ViewModel = function(first, last) {
 		this.firstName = ko.observable(first);
@@ -13,8 +10,11 @@
 			// Knockout tracks dependencies automatically. It knows that fullName depends on firstName and lastName, because these get called when evaluating fullName.
 			return this.firstName() + " " + this.lastName();
 		}, this);
+               
 	};
-	 
+
+    ViewModel();
+    testFunction();
 	ko.applyBindings(new ViewModel("Planet", "Earth")); // This makes Knockout get to work
 </script>
 </head>
@@ -22,6 +22,6 @@
 <body>
 <p>First name: <input data-bind="value: firstName" /></p>
 <p>Last name: <input data-bind="value: lastName" /></p>
-<h2>Hello, <span data-bind="value: fullName"> </span>!</h2>
+<h2>Hello  <span data-bind="value: fullName"> </span>!</h2>
 </body> 
 </html>

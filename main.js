@@ -1,3 +1,6 @@
+/* https://github.com/adobe/brackets/blob/master/src/extensions/default/JavaScriptQuickEdit/main.js */
+/* Used as an example. Kudo's to Adobe for releasing and creating Brackets open-source. */
+
 /*jslint vars: true, plusplus: true, devel: true, nomen: true, indent: 4, maxerr: 50 */
 /*global define, $, brackets, window */
 
@@ -69,56 +72,56 @@ define(function (require, exports, module) {
         }
 
         var result = new $.Deferred();
-        PerfUtils.markStart(PerfUtils.JAVASCRIPT_INLINE_CREATE);
+        PerfUtils.markStart(PerfUtils.KNOCKOUT_INLINE_CREATE);
 
         var response = helper();
         if (response.hasOwnProperty("promise")) {
             response.promise.done(function (jumpResp) {
-                var resolvedPath = jumpResp.fullPath;
-                if (resolvedPath) {
+                //var resolvedPath = jumpResp.fullPath;
+//                if (resolvedPath) {
+//
+//                    // Tern doesn't always return entire function extent.
+//                    // Use QuickEdit search now that we know which file to look at.
+//                    var fileInfos = [];
+//                    fileInfos.push({name: jumpResp.resultFile, fullPath: resolvedPath});
+//                    KOUtils.findMatchingFunctions(functionName, fileInfos, true)
+//                        .done(function (functions) {
+//                            if (functions && functions.length > 0) {
+//                                var jsInlineEditor = new MultiRangeInlineEditor(functions);
+//                                jsInlineEditor.load(hostEditor);
+//                                
+//                                PerfUtils.addMeasurement(PerfUtils.KNOCKOUT_INLINE_CREATE);
+//                                result.resolve(jsInlineEditor);
+//                            } else {
+//                                // No matching functions were found
+//                                PerfUtils.addMeasurement(PerfUtils.KNOCKOUT_INLINE_CREATE);
+//                                result.reject();
+//                            }
+//                        })
+//                        .fail(function () {
+//                            PerfUtils.addMeasurement(PerfUtils.KNOCKOUT_INLINE_CREATE);
+//                            result.reject();
+//                        });
+//
+//                } else {        // no result from Tern.  Fall back to _findInProject().
 
-                    // Tern doesn't always return entire function extent.
-                    // Use QuickEdit search now that we know which file to look at.
-                    var fileInfos = [];
-                    fileInfos.push({name: jumpResp.resultFile, fullPath: resolvedPath});
-                    JSUtils.findMatchingFunctions(functionName, fileInfos, true)
-                        .done(function (functions) {
-                            if (functions && functions.length > 0) {
-                                var jsInlineEditor = new MultiRangeInlineEditor(functions);
-                                jsInlineEditor.load(hostEditor);
-                                
-                                PerfUtils.addMeasurement(PerfUtils.KNOCKOUT_INLINE_CREATE);
-                                result.resolve(jsInlineEditor);
-                            } else {
-                                // No matching functions were found
-                                PerfUtils.addMeasurement(PerfUtils.KNOCKOUT_INLINE_CREATE);
-                                result.reject();
-                            }
-                        })
-                        .fail(function () {
-                            PerfUtils.addMeasurement(PerfUtils.KNOCKOUT_INLINE_CREATE);
-                            result.reject();
-                        });
-
-                } else {        // no result from Tern.  Fall back to _findInProject().
-
-                    _findInProject(functionName).done(function (functions) {
-                        if (functions && functions.length > 0) {
-                            var jsInlineEditor = new MultiRangeInlineEditor(functions);
-                            jsInlineEditor.load(hostEditor);
-                            
-                            PerfUtils.addMeasurement(PerfUtils.KNOCKOUT_INLINE_CREATE);
-                            result.resolve(jsInlineEditor);
-                        } else {
-                            // No matching functions were found
-                            PerfUtils.addMeasurement(PerfUtils.KNOCKOUT_INLINE_CREATE);
-                            result.reject();
-                        }
-                    }).fail(function () {
-                        PerfUtils.finalizeMeasurement(PerfUtils.KNOCKOUT_INLINE_CREATE);
+                _findInProject(functionName).done(function (functions) {
+                    if (functions && functions.length > 0) {
+                        var koInlineEditor = new MultiRangeInlineEditor(functions);
+                        koInlineEditor.load(hostEditor);
+                        
+                        PerfUtils.addMeasurement(PerfUtils.KNOCKOUT_INLINE_CREATE);
+                        result.resolve(koInlineEditor);
+                    } else {
+                        // No matching functions were found
+                        PerfUtils.addMeasurement(PerfUtils.KNOCKOUT_INLINE_CREATE);
                         result.reject();
-                    });
-                }
+                    }
+                }).fail(function () {
+                    PerfUtils.finalizeMeasurement(PerfUtils.KNOCKOUT_INLINE_CREATE);
+                    result.reject();
+                });
+//                }
 
             }).fail(function () {
                 PerfUtils.finalizeMeasurement(PerfUtils.KNOCKOUT_INLINE_CREATE);
@@ -132,8 +135,7 @@ define(function (require, exports, module) {
     
     /**
      * This function is registered with EditorManager as an inline editor provider. It creates an inline editor
-     * when the cursor is on a JavaScript function name, finds all functions that match the name
-     * and shows (one/all of them) in an inline editor.
+     * when the cursor is on a ko.computed name, finds all computeds with that name. Only works in .html files!
      *
      * @param {!Editor} editor
      * @param {!{line:Number, ch:Number}} pos
@@ -141,19 +143,18 @@ define(function (require, exports, module) {
      *      or null if we're not going to provide anything.
      */
     function computedProvider(hostEditor, pos) {
-        // Only provide a JavaScript editor when cursor is in JavaScript content
+        // Only provide a ko.computed editor when cursor is in html content
         if (hostEditor.getModeForSelection() !== "html") {
             return null;
         }
         
-        // Only provide JavaScript editor if the selection is within a single line
+        // Only provide ko.computed editor if the selection is within a single line
         var sel = hostEditor.getSelection();
         if (sel.start.line !== sel.end.line) {
             return null;
         }
 
-        // Always use the selection start for determining the function name. The pos
-        // parameter is usually the selection end.        
+        // Only works if you select the whole computed name at this very moment.     
         var functionName = _getComputedName(hostEditor, sel.start);
         if (!functionName) {
             return null;
@@ -168,7 +169,7 @@ define(function (require, exports, module) {
     PerfUtils.createPerfMeasurement("KNOCKOUT_FIND_FUNCTION", "Knockout Find Function");
     
     // for unit tests only
-    exports.computedProvider            = computedProvider;
-    exports._createInlineEditor         = _createInlineEditor;
-    exports._findInProject              = _findInProject;
+    exports.computedProvider    = computedProvider;
+    exports._createInlineEditor = _createInlineEditor;
+    exports._findInProject      = _findInProject;
 });

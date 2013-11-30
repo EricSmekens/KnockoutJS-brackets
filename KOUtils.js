@@ -1,8 +1,11 @@
+/* https://github.com/adobe/brackets/blob/master/src/language/JSUtils.js */
+/* Used as an example. Kudo's to Adobe for releasing and creating Brackets open-source. */
+
 /*jslint vars: true, plusplus: true, devel: true, nomen: true, regexp: true, indent: 4, maxerr: 50 */
 /*global define, $, brackets, CodeMirror */
 
 /**
- * Set of utilities for simple parsing of KO js functions.
+ * Set of utilities for simple parsing of KO functions.
  */
 define(function (require, exports, module) {
     "use strict";
@@ -26,15 +29,14 @@ define(function (require, exports, module) {
     var _changedDocumentTracker = new ChangedDocumentTracker();
     
     /**
-     * Function matching regular expression. Recognizes the forms:
-     * "function functionName()", "functionName = function()", and
-     * "functionName: function()".
+     * KO computed/observable matching regular expression.
      *
-     * Note: JavaScript identifier matching is not strictly to spec. This
+     * Note: KO identifier matching is not strictly to spec. This
      * RegExp matches any sequence of characters that is not whitespace.
      * @type {RegExp}
      */
-    var _computedRegExp = /\.([a-zA-Z]+)(\s)*=(\s)*ko\.computed\(/g;
+    var _computedRegExp = /\.([a-zA-Z]+)(\s)*=(\s)*ko\.computed/g;
+    //var _observableRegExp = /\.([a-zA-Z]+)(\s)*=(\s)*ko\.observable/g;
     
     /**
      * @private
@@ -373,42 +375,10 @@ define(function (require, exports, module) {
         
         return result.promise();
     }
-
-    /**
-     * Finds all instances of the specified searchName in "text".
-     * Returns an Array of Objects with start and end properties.
-     *
-     * @param text {!String} JS text to search
-     * @param searchName {!String} function name to search for
-     * @return {Array.<{offset:number, functionName:string}>}
-     *      Array of objects containing the start offset for each matched function name.
-     */
-    function findAllMatchingFunctionsInText(text, searchName) {
-        var allFunctions = _findAllFunctionsInText(text);
-        var result = [];
-        var lines = text.split("\n");
-        
-        _.forEach(allFunctions, function (functions, functionName) {
-            if (functionName === searchName || searchName === "*") {
-                functions.forEach(function (funcEntry) {
-                    var endOffset = _getFunctionEndOffset(text, funcEntry.offsetStart);
-                    result.push({
-                        name: functionName,
-                        lineStart: StringUtils.offsetToLineNum(lines, funcEntry.offsetStart),
-                        lineEnd: StringUtils.offsetToLineNum(lines, endOffset)
-                    });
-                });
-            }
-        });
-         
-        return result;
-    }
     
     PerfUtils.createPerfMeasurement("KOUTILS_GET_ALL_FUNCTIONS", "Parallel file search across project");
     PerfUtils.createPerfMeasurement("KOUTILS_REGEXP", "RegExp search for all functions");
     PerfUtils.createPerfMeasurement("KOUTILS_END_OFFSET", "Find end offset for a single matched function");
 
-    exports.findAllMatchingFunctionsInText = findAllMatchingFunctionsInText;
-    exports._getFunctionEndOffset = _getFunctionEndOffset; // For testing only
     exports.findMatchingFunctions = findMatchingFunctions;
 });

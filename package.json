@@ -1,12 +1,12 @@
 {
     "name": "EricSmekens.knockoutjs",
     "title": "KnockoutJS for Brackets",
-    "description": "Adding knockout functionality to brackets",
+    "description": "Adding knockout quickedits to brackets (only basic quick-edit for ko.computed at the moment.)",
     "homepage": "https://github.com/EricSmekens/KnockoutJS-brackets",
     "version": "0.0.1",
-    "author": "Eric Smekens",
+    "author": "Eric Smekens (https://github.com/EricSmekens)",
     "license": "MIT",
     "engines": {
-        "brackets": ">=0.24.0"
+        "brackets": ">=0.34.0"
     }
 }
