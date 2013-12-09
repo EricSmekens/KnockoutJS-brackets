@@ -35,7 +35,7 @@ define(function (require, exports, module) {
      * RegExp matches any sequence of characters that is not whitespace.
      * @type {RegExp}
      */
-    var _computedRegExp = /\.([a-zA-Z0-9]+)(\s)*=(\s)*ko\.computed/g;
+    var _computedRegExp = /\.([\w]+)(\s)*=(\s)*ko\.computed/g;
     //var _observableRegExp = /\.([a-zA-Z]+)(\s)*=(\s)*ko\.observable/g;
     
     /**
