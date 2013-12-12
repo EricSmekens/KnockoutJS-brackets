@@ -1,13 +1,25 @@
-KnockoutJS-brackets
+KnockoutJS-brackets 0.0.2
 ===================
 
 Knockout extension for brackets. It's currently work-in-progress. 
 Ideas, contributions and any other support are welcome! :)
 
+
+## Release notes
+
+### 0.0.2
+* ko.computed quick-edit works for names with numbers and underscores as well.
+
+### 0.0.1
+* First working version 
+* Quick-edit for ko.computed. (Not works with numbers in computed name and only works when you fully select the computed's name.)
+
+
+
 What is currently working
 -----------
 Quick-edit for ko.computed.
-(Not works with numbers in computed name and only works when you fully select the computed's name.)
+(Only works when you fully select the computed's name.)
 This feature will be extended in next versions.
 
 
@@ -20,8 +32,6 @@ Quick-edit for:
 * better quick edit for ko.computed
 * ko.observable ?
 * subscribes ?
-    
-* Lint API additions for ko.computed, ko.observable maybe in the future.
 
 Thanks to:
 -----------
