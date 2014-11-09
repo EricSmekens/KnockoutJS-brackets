@@ -2,7 +2,7 @@ KnockoutJS-brackets 0.0.3
 ===================
 
 Knockout extension for brackets. It's currently work-in-progress. 
-Ideas, contributions and any other support are welcome! :)
+Ideas, contributions and any other support are welcome! Especially some creative ideas, features you would like to see!
 
 ## Release notes
 
