@@ -2,7 +2,7 @@
 /* Used as an example. Kudo's to Adobe for releasing and creating Brackets open-source. */
 
 /*jslint vars: true, plusplus: true, devel: true, nomen: true, regexp: true, indent: 4, maxerr: 50 */
-/*global define, $, brackets, CodeMirror */
+/*global define, $, brackets */
 
 /**
  * Set of utilities for simple parsing of KO functions.
@@ -20,7 +20,8 @@ define(function (require, exports, module) {
         FileUtils               = brackets.getModule("file/FileUtils"),
         PerfUtils               = brackets.getModule("utils/PerfUtils"),
         ProjectManager          = brackets.getModule("project/ProjectManager"),
-        StringUtils             = brackets.getModule("utils/StringUtils");
+        StringUtils             = brackets.getModule("utils/StringUtils"),
+        _codeMirror             = brackets.getModule("thirdparty/CodeMirror2/lib/codemirror")
 
     /**
      * Tracks dirty documents between invocations of findMatchingFunctions.
@@ -71,8 +72,8 @@ define(function (require, exports, module) {
     // the end offset for the function (the closing "}"). Returns the position one past the
     // close brace. Properly ignores braces inside comments, strings, and regexp literals.
     function _getFunctionEndOffset(text, offsetStart) {
-        var mode = CodeMirror.getMode({}, "javascript");
-        var state = CodeMirror.startState(mode), stream, style, token;
+        var mode = _codeMirror.getMode({}, "javascript");
+        var state = _codeMirror.startState(mode), stream, style, token;
         var curOffset = offsetStart, length = text.length, blockCount = 0, lineStart;
         var foundStartBrace = false;
         
@@ -90,7 +91,7 @@ define(function (require, exports, module) {
             if (lineEnd === -1) {
                 lineEnd = length;
             }
-            stream = new CodeMirror.StringStream(text.slice(curOffset, lineEnd));
+            stream = new _codeMirror.StringStream(text.slice(curOffset, lineEnd));
             return true;
         }
         

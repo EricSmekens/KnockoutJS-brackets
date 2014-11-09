@@ -20,7 +20,19 @@ define(function (require, exports, module) {
      * Return the selected string.
      */
     function _getComputedName(hostEditor, pos) {
-        return hostEditor._codeMirror.getSelection();
+        var A1 = pos.line;
+        var A2 = pos.ch;
+
+        var B1 = hostEditor._codeMirror.findWordAt({line: A1, ch: A2}).anchor.ch;
+        var B2 = hostEditor._codeMirror.findWordAt({line: A1, ch: A2}).head.ch;
+
+        var computedName = hostEditor._codeMirror.getRange({line: A1,ch: B1}, {line: A1,ch: B2});
+        if (computedName.match(/[a-zA-Z]\w+/g)) {
+            return computedName;
+        } else {
+            //Fallback, didn't get computed name, so just get the selection instead.
+            return hostEditor._codeMirror.getSelection();
+        }
     }
     
     /**
