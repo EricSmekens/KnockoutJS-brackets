@@ -2,11 +2,11 @@ KnockoutJS-brackets 0.0.4
 ===================
 
 Knockout extension for brackets. It's currently work-in-progress. 
-Ideas, contributions and any other support are welcome! Especially some creative ideas, features you would like to see!
+Ideas, contributions and any other support are welcome! :)
 
 ## Release notes
 
-### 0.0.4 (TO BE RELEASED, NEEDS MORE FUNCTIONALITY)
+### 0.0.4
 * Added quick-link icon to knockout site.
 
 ### 0.0.3
@@ -22,16 +22,11 @@ Ideas, contributions and any other support are welcome! Especially some creative
 * Quick-edit for ko.computed. (Not works with numbers in computed name and only works when you fully select the computed's name.)
 
 
-What is currently working
------------
-Quick-edit for ko.computed.
-This feature will be extended in next versions.
-
-
 Currently planning to implement:
 -----------
-* Unit-tests. 
 * More refactoring and improving current ko.computed functionality.
+* Code-hinting/linting. (e.g. 'data-bind=""'.)
+* Settings to disable the quick-link icon and maybe code-hinting/linting options as well.
 
 Quick-edit for:
 * ko.observable ?

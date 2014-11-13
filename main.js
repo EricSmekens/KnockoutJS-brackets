@@ -29,7 +29,7 @@ define(function (require, exports, module) {
         var B1 = hostEditor._codeMirror.findWordAt({line: A1, ch: A2}).anchor.ch;
         var B2 = hostEditor._codeMirror.findWordAt({line: A1, ch: A2}).head.ch;
 
-        var computedName = hostEditor._codeMirror.getRange({line: A1,ch: B1}, {line: A1,ch: B2});
+        var computedName = hostEditor._codeMirror.getRange({line: A1, ch: B1}, {line: A1, ch: B2});
         if (computedName.match(/[a-zA-Z]\w+/g)) {
             return computedName;
         } else {
@@ -195,7 +195,7 @@ define(function (require, exports, module) {
         .appendTo($("#main-toolbar .buttons"));
 
     icon.click(function () {
-        open_ko_link()
+        open_ko_link();
     });
 
     var KO_DOC_EXECUTE = 'ko.doc';

@@ -21,7 +21,7 @@ define(function (require, exports, module) {
         PerfUtils               = brackets.getModule("utils/PerfUtils"),
         ProjectManager          = brackets.getModule("project/ProjectManager"),
         StringUtils             = brackets.getModule("utils/StringUtils"),
-        _codeMirror             = brackets.getModule("thirdparty/CodeMirror2/lib/codemirror")
+        _codeMirror             = brackets.getModule("thirdparty/CodeMirror2/lib/codemirror");
 
     /**
      * Tracks dirty documents between invocations of findMatchingFunctions.
