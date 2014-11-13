@@ -3,7 +3,7 @@
     "title": "KnockoutJS for Brackets",
     "description": "Adding knockout quickedits to brackets (only basic quick-edit for ko.computed at the moment. Ideas are welcome!)",
     "homepage": "https://github.com/EricSmekens/KnockoutJS-brackets",
-    "version": "0.0.3",
+    "version": "0.0.4",
     "author": "Eric Smekens (https://github.com/EricSmekens)",
     "license": "MIT",
     "engines": {

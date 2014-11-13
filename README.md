@@ -1,10 +1,13 @@
-KnockoutJS-brackets 0.0.3
+KnockoutJS-brackets 0.0.4
 ===================
 
 Knockout extension for brackets. It's currently work-in-progress. 
 Ideas, contributions and any other support are welcome! Especially some creative ideas, features you would like to see!
 
 ## Release notes
+
+### 0.0.4 (TO BE RELEASED, NEEDS MORE FUNCTIONALITY)
+* Added quick-link icon to knockout site.
 
 ### 0.0.3
 * Tested for brackets 1.0.0. Older versions of brackets may work, but I set 1.0.0 as lowest requirement. You can still use 0.0.2. 
