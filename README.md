@@ -1,10 +1,14 @@
-KnockoutJS-brackets 0.0.4
+KnockoutJS-brackets 0.0.5
 ===================
 
 Knockout extension for brackets. It's currently work-in-progress. 
 Ideas, contributions and any other support are welcome! :)
 
 ## Release notes
+
+### 0.0.5(in-progress)
+* Added a show_icon preference, so users can disable the quick-link icon to knockout-website through the preferences file.
+* ....Looking into code-hints/coloring.
 
 ### 0.0.4
 * Added quick-link icon to knockout site.
