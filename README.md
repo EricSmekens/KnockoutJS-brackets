@@ -6,9 +6,9 @@ Ideas, contributions and any other support are welcome! :)
 
 ## Release notes
 
-### 0.0.5(in-progress)
+### 0.0.5
 * Added a show_icon preference, so users can disable the quick-link icon to knockout-website through the preferences file.
-* ....Looking into code-hints/coloring.
+* Basic code-hinting for data-bind="" in .html files.
 
 ### 0.0.4
 * Added quick-link icon to knockout site.
@@ -25,18 +25,13 @@ Ideas, contributions and any other support are welcome! :)
 * First working version 
 * Quick-edit for ko.computed. (Not works with numbers in computed name and only works when you fully select the computed's name.)
 
-
 Currently planning to implement:
 -----------
-* More refactoring and improving current ko.computed functionality.
-* Code-hinting/linting. (e.g. 'data-bind=""'.)
-* Settings to disable the quick-link icon and maybe code-hinting/linting options as well.
-
-Quick-edit for:
-* ko.observable ?
-* subscribes ?
+* Cleaning code up, make some short manual/documentation and release it as 0.1.0.
+* Code-linting.
 
 Thanks to:
 -----------
 * Adobe, for creating brackets (and making it open-source).
 * The creator of the AngularJS-brackets extension, AngularUI. Gave me inspiration to create this knockout version that works on a the not-deprecated API's.
+* C. Oliff, for making the code-hint library for HTML which I reused to support data-bind hints.

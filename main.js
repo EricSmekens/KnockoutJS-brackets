@@ -18,16 +18,24 @@ define(function (require, exports, module) {
         Menus                   = brackets.getModule('command/Menus'),
         NativeApp               = brackets.getModule('utils/NativeApp'),
         PreferencesManager      = brackets.getModule('preferences/PreferencesManager'),
-        KOUtils                 = require("KOUtils");
+        CodeHintManager         = brackets.getModule("editor/CodeHintManager"),
+        KOUtils                 = require("KOUtils"),
+        KOCodeHints             = require("KOCodeHints");
     
     /**
      * Get preferences.
      */
     var koJsPreferences = PreferencesManager.getExtensionPrefs("ericsmekens.knockoutjs");
     var showKOIcon = koJsPreferences.get('show_icon');
+    var useKOCodeHint = koJsPreferences.get('code_hint');
     if (showKOIcon === undefined) {
         showKOIcon = true;
         koJsPreferences.set('show_icon', true);
+        koJsPreferences.save();
+    }
+    if (useKOCodeHint === undefined) {
+        useKOCodeHint = true;
+        koJsPreferences.set('code_hint', true);
         koJsPreferences.save();
     }
     
@@ -189,5 +197,10 @@ define(function (require, exports, module) {
 
         var menu = Menus.getMenu(Menus.AppMenuBar.FIND_MENU);
         menu.addMenuItem(KO_DOC_EXECUTE, 'Ctrl-Alt-K');
+    }
+    
+    //Register CodeHinter for KO
+    if (useKOCodeHint) {
+        KOCodeHints.initKOCodeHinter();
     }
 });
