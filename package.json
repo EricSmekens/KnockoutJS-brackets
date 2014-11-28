@@ -2,9 +2,19 @@
     "name": "ericsmekens.knockoutjs",
     "title": "KnockoutJS for Brackets",
     "description": "Adding knockout quickedits, links and codehints to brackets. (Ideas are welcome!)",
+    "keywords": [
+        "knockout", "ko", "javascript", "mvvm"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/EricSmekens/KnockoutJS-brackets.git"
+    },
     "homepage": "https://github.com/EricSmekens/KnockoutJS-brackets",
-    "version": "0.0.5",
-    "author": "Eric Smekens (https://github.com/EricSmekens)",
+    "version": "0.1.0",
+    "author": {
+        "name": "Eric Smekens",
+        "url": "https://github.com/EricSmekens"
+    },
     "license": "MIT",
     "engines": {
         "brackets": ">=1.0.0"

@@ -1,10 +1,27 @@
-KnockoutJS-brackets 0.0.5
+KnockoutJS-brackets 0.1.0
 ===================
 
-Knockout extension for brackets. It's currently work-in-progress. 
-Ideas, contributions and any other support are welcome! :)
+Knockout.js extension for brackets. Ideas and contributions are welcome! :)
+
+## Features
+
+* Quick-link to knockout. (Icon, menu and shortcut (Ctrl+Alt+K)).
+* Code-hinting in html files with the data-bind attribute.
+* Quick-edit for ko.computed. (Ctrl + E).
+
+All features can be disabled separately in the Brackets-preference file:
+
+```JSON
+"ericsmekens.knockoutjs.show_icon": true,
+"ericsmekens.knockoutjs.code_hint": true,
+"ericsmekens.knockoutjs.quick_edit": true
+```
 
 ## Release notes
+
+### 0.1.0
+* Code has been cleaned up, package.json/readme has been updated. 
+* More efficient code, seperated in files and more preference settings.
 
 ### 0.0.5
 * Added a show_icon preference, so users can disable the quick-link icon to knockout-website through the preferences file.
@@ -27,7 +44,6 @@ Ideas, contributions and any other support are welcome! :)
 
 Currently planning to implement:
 -----------
-* Cleaning code up, make some short manual/documentation and release it as 0.1.0.
 * Code-linting.
 
 Thanks to:

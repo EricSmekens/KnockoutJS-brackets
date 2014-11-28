@@ -4,9 +4,6 @@
 /*jslint vars: true, plusplus: true, devel: true, nomen: true, regexp: true, indent: 4, maxerr: 50 */
 /*global define, $, brackets */
 
-/**
- * Set of utilities for simple parsing of KO functions.
- */
 define(function (require, exports, module) {
     "use strict";
     
@@ -16,9 +13,10 @@ define(function (require, exports, module) {
     var Async                   = brackets.getModule("utils/Async"),
         DocumentManager         = brackets.getModule("document/DocumentManager"),
         ChangedDocumentTracker  = brackets.getModule("document/ChangedDocumentTracker"),
+        EditorManager           = brackets.getModule("editor/EditorManager"),
         FileSystem              = brackets.getModule("filesystem/FileSystem"),
         FileUtils               = brackets.getModule("file/FileUtils"),
-        PerfUtils               = brackets.getModule("utils/PerfUtils"),
+        MultiRangeInlineEditor  = brackets.getModule("editor/MultiRangeInlineEditor").MultiRangeInlineEditor,
         ProjectManager          = brackets.getModule("project/ProjectManager"),
         StringUtils             = brackets.getModule("utils/StringUtils"),
         _codeMirror             = brackets.getModule("thirdparty/CodeMirror2/lib/codemirror");
@@ -37,7 +35,6 @@ define(function (require, exports, module) {
      * @type {RegExp}
      */
     var _computedRegExp = /\.([\w]+)(\s)*=(\s)*ko\.computed/g;
-    //var _observableRegExp = /\.([a-zA-Z]+)(\s)*=(\s)*ko\.observable/g;
     
     /**
      * @private
@@ -51,8 +48,6 @@ define(function (require, exports, module) {
             functionName,
             match;
         
-        PerfUtils.markStart(PerfUtils.KOUTILS_REGEXP);
-        
         while ((match = _computedRegExp.exec(text)) !== null) {
             functionName = (match[1] || match[0]).trim();
             
@@ -62,8 +57,6 @@ define(function (require, exports, module) {
             
             results[functionName].push({offsetStart: match.index});
         }
-        
-        PerfUtils.addMeasurement(PerfUtils.KOUTILS_REGEXP);
         
         return results;
     }
@@ -152,13 +145,9 @@ define(function (require, exports, module) {
         
         functions.forEach(function (funcEntry) {
             if (!funcEntry.offsetEnd) {
-                PerfUtils.markStart(PerfUtils.KOUTILS_END_OFFSET);
-                
                 funcEntry.offsetEnd = _getFunctionEndOffset(text, funcEntry.offsetStart);
                 funcEntry.lineStart = StringUtils.offsetToLineNum(lines, funcEntry.offsetStart);
                 funcEntry.lineEnd   = StringUtils.offsetToLineNum(lines, funcEntry.offsetEnd);
-                
-                PerfUtils.addMeasurement(PerfUtils.KOUTILS_END_OFFSET);
             }
             
             rangeResults.push({
@@ -316,8 +305,6 @@ define(function (require, exports, module) {
         var result          = new $.Deferred(),
             docEntries      = [];
         
-        PerfUtils.markStart(PerfUtils.KOUTILS_GET_ALL_FUNCTIONS);
-        
         Async.doInParallel(fileInfos, function (fileInfo) {
             var oneResult = new $.Deferred();
             
@@ -335,7 +322,6 @@ define(function (require, exports, module) {
             // Reset ChangedDocumentTracker now that the cache is up to date.
             _changedDocumentTracker.reset();
             
-            PerfUtils.addMeasurement(PerfUtils.KOUTILS_GET_ALL_FUNCTIONS);
             result.resolve(docEntries);
         });
         
@@ -343,6 +329,7 @@ define(function (require, exports, module) {
     }
     
     /**
+     * @private
      * Return all functions that have the specified name, searching across all the given files.
      *
      * @param {!String} functionName The name to match.
@@ -377,9 +364,131 @@ define(function (require, exports, module) {
         return result.promise();
     }
     
-    PerfUtils.createPerfMeasurement("KOUTILS_GET_ALL_FUNCTIONS", "Parallel file search across project");
-    PerfUtils.createPerfMeasurement("KOUTILS_REGEXP", "RegExp search for all functions");
-    PerfUtils.createPerfMeasurement("KOUTILS_END_OFFSET", "Find end offset for a single matched function");
+    /**
+     * Return the computed name based on where the cursor is, or what text is selected.
+     * @param {!Editor} editor
+     * @param {!{line:Number, ch:Number}} pos
+     * @return {!string} name of ko.computed.
+     */
+    function _getComputedName(hostEditor, pos) {
+        var A1 = pos.line;
+        var A2 = pos.ch;
 
-    exports.findMatchingFunctions = findMatchingFunctions;
+        var B1 = hostEditor._codeMirror.findWordAt({line: A1, ch: A2}).anchor.ch;
+        var B2 = hostEditor._codeMirror.findWordAt({line: A1, ch: A2}).head.ch;
+
+        var computedName = hostEditor._codeMirror.getRange({line: A1, ch: B1}, {line: A1, ch: B2});
+        if (computedName.match(/[a-zA-Z]\w+/g)) {
+            return computedName;
+        } else {
+            //Fallback, didn't get computed name, so just get the selection instead.
+            return hostEditor._codeMirror.getSelection();
+        }
+    }
+    
+    /**
+     * @private
+     * Allows lookup by function name instead of editor offset
+     * without constructing an inline editor.
+     *
+     * @param {!string} functionName
+     * @return {$.Promise} a promise that will be resolved with an array of function offset information
+     */
+    function _findInProject(functionName) {
+        var result = new $.Deferred();
+        
+        ProjectManager.getAllFiles()
+            .done(function (files) {
+                findMatchingFunctions(functionName, files, true)
+                    .done(function (functions) {
+                        result.resolve(functions);
+                    })
+                    .fail(function () {
+                        result.reject();
+                    });
+            })
+            .fail(function () {
+                result.reject();
+            });
+        
+        return result.promise();
+    }
+    
+    /**
+     * @private
+     * Allows lookup by function name instead of editor offset .
+     *
+     * @param {!Editor} hostEditor
+     * @param {!string} functionName
+     * @return {$.Promise} a promise that will be resolved with an InlineWidget
+     *      or null if we're not going to provide anything.
+     */
+    function _createInlineEditor(hostEditor, functionName) {
+        // Use Tern jump-to-definition helper, if it's available, to find InlineEditor target.
+        var helper = brackets._jsCodeHintsHelper;
+        if (helper === null) {
+            return null;
+        }
+
+        var result = new $.Deferred();
+
+        var response = helper();
+        if (response.hasOwnProperty("promise")) {
+            response.promise.done(function (jumpResp) {
+                _findInProject(functionName).done(function (functions) {
+                    if (functions && functions.length > 0) {
+                        var koInlineEditor = new MultiRangeInlineEditor(functions);
+                        koInlineEditor.load(hostEditor);
+                        result.resolve(koInlineEditor);
+                    } else {
+                        // No matching functions were found
+                        result.reject();
+                    }
+                }).fail(function () {
+                    result.reject();
+                });
+
+            }).fail(function () {
+                result.reject();
+            });
+
+        }
+
+        return result.promise();
+    }
+    
+    /**
+     * This function is registered with EditorManager as an inline editor provider. It creates an inline editor
+     * when the cursor is on a ko.computed name, finds all computeds with that name. Only works in .html files!
+     *
+     * @param {!Editor} editor
+     * @param {!{line:Number, ch:Number}} pos
+     * @return {$.Promise} a promise that will be resolved with an InlineWidget
+     *      or null if we're not going to provide anything.
+     */
+    function computedProvider(hostEditor, pos) {
+        // Only provide a ko.computed editor when cursor is in html content
+        if (hostEditor.getModeForSelection() !== "html") {
+            return null;
+        }
+        
+        // Only provide ko.computed editor if the selection is within a single line
+        var sel = hostEditor.getSelection();
+        if (sel.start.line !== sel.end.line) {
+            return null;
+        }
+
+        // Only works if you select the whole computed name at this very moment.     
+        var functionName = _getComputedName(hostEditor, sel.start);
+        if (!functionName) {
+            return null;
+        }
+
+        return _createInlineEditor(hostEditor, functionName);
+    }
+    function initQuickEdit() {
+        EditorManager.registerInlineEditProvider(computedProvider);
+    }
+    
+    exports.initKOQuickEdit = initQuickEdit;
 });
