@@ -3,6 +3,8 @@ KnockoutJS-brackets 0.1.0
 
 Knockout.js extension for brackets. Ideas and contributions are welcome! :)
 
+![Feature demo](Resources/ko-extension.gif)
+
 ## Features
 
 * Quick-link to knockout. (Icon, menu and shortcut (Ctrl+Alt+K)).
