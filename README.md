@@ -44,7 +44,8 @@ All features can be disabled separately in the Brackets-preference file:
 
 Currently planning to implement:
 -----------
-* Code-linting.
+* Code-linting/hinting js. (Waiting for better brackets support on that one.)
+* Your feature that you want!
 
 Thanks to:
 -----------
